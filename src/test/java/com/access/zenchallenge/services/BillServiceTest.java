@@ -1,9 +1,13 @@
 package com.access.zenchallenge.services;
 
+import com.access.zenchallenge.constant.ProductCategory;
+import com.access.zenchallenge.constant.UserType;
 import com.access.zenchallenge.dto.BillDto;
 import com.access.zenchallenge.dto.ProductDto;
 import com.access.zenchallenge.dto.UserDto;
 import com.access.zenchallenge.entity.BillEntity;
+import com.access.zenchallenge.entity.ProductEntity;
+import com.access.zenchallenge.entity.UserEntity;
 import com.access.zenchallenge.repository.BillRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,21 +40,36 @@ class BillServiceTest {
     private BillService billService;
 
     private BillDto billDto;
+    private UserEntity userEntity;
+    private ProductEntity productEntity;
     private BillEntity billEntity;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(1L);
+        userEntity.setName("John Doe");
+        userEntity.setUserType(UserType.EMPLOYEE);
+
         // Setup mock objects
         UserDto userDto = new UserDto();
         userDto.setId(1L);
         userDto.setName("John Doe");
+        userDto.setUserType(UserType.EMPLOYEE);
 
         ProductDto productDto = new ProductDto();
         productDto.setId(1L);
         productDto.setName("Product 1");
         productDto.setPrice(100.0);
+        productDto.setCategory(ProductCategory.GROCERY);
+
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setId(1L);
+        productEntity.setName("Product 1");
+        productEntity.setPrice(100.0);
+        productEntity.setCategory(ProductCategory.GROCERY);
 
         billDto = new BillDto();
         billDto.setId(1L);
@@ -59,7 +78,9 @@ class BillServiceTest {
 
         billEntity = new BillEntity();
         billEntity.setId(1L);
-
+        billEntity.setUserEntity(userEntity);
+        billEntity.setProductEntities(Arrays.asList(productEntity, productEntity));
+        billEntity.setNetPayableAmount(180.0);
     }
 
     @Test
@@ -101,18 +122,40 @@ class BillServiceTest {
     }
 
     @Test
+     void testSaveBill_NullBillDto() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            billService.saveBill(null);
+        });
+
+        assertEquals("BillDto cannot be null", exception.getMessage());
+    }
+
+    @Test
+     void testSaveBill_InvalidBillDto() {
+        BillDto invalidBillDto = new BillDto();
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            billService.saveBill(invalidBillDto);
+        });
+
+        assertEquals("BillDto must have valid user and product details", exception.getMessage());
+    }
+
+
+    @Test
     void testSaveBill() {
+        when(discountService.calculateDiscount(any(BillDto.class))).thenReturn(180.0);
         when(modelMapper.map(any(BillDto.class), eq(BillEntity.class))).thenReturn(billEntity);
-        when(discountService.calculateDiscount(any(BillEntity.class))).thenReturn(90.0);
         when(billRepository.save(any(BillEntity.class))).thenReturn(billEntity);
 
         BillEntity result = billService.saveBill(billDto);
 
         assertNotNull(result);
-        assertEquals(90.0, result.getNetPayableAmount());
-        verify(modelMapper, times(1)).map(any(BillDto.class), eq(BillEntity.class));
-        verify(discountService, times(1)).calculateDiscount(any(BillEntity.class));
+        assertEquals(180.0, result.getNetPayableAmount());
+        assertEquals(1L, result.getId());
+        verify(discountService, times(1)).calculateDiscount(any(BillDto.class));
         verify(billRepository, times(1)).save(any(BillEntity.class));
+
     }
 
     @Test

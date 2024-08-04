@@ -48,11 +48,11 @@ public class BillService {
         if (billDto.getUserDto() == null || billDto.getProductDtos() == null || billDto.getProductDtos().isEmpty()) {
             throw new IllegalArgumentException("BillDto must have valid user and product details");
         }
+        double netPayableAmount = discountService.calculateDiscount(billDto);
 
-        BillEntity billEntity = modelMapper.map(billDto, BillEntity.class);
-        double netPayableAmount = discountService.calculateDiscount(billEntity);
         // Save the net payable amount to the bill
-        billEntity.setNetPayableAmount(netPayableAmount);
+        billDto.setNetPayableAmount(netPayableAmount);
+        BillEntity billEntity = modelMapper.map(billDto, BillEntity.class);
         return billRepository.save(billEntity);
     }
 

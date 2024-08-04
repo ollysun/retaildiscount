@@ -3,6 +3,9 @@ package com.access.zenchallenge.services;
 
 import com.access.zenchallenge.constant.ProductCategory;
 import com.access.zenchallenge.constant.UserType;
+import com.access.zenchallenge.dto.BillDto;
+import com.access.zenchallenge.dto.ProductDto;
+import com.access.zenchallenge.dto.UserDto;
 import com.access.zenchallenge.entity.BillEntity;
 import com.access.zenchallenge.entity.ProductEntity;
 import com.access.zenchallenge.entity.UserEntity;
@@ -14,19 +17,19 @@ import java.time.temporal.ChronoUnit;
 @Service
 public class DiscountService {
 
-    public double calculateDiscount(BillEntity billEntity) {
-        UserEntity user = billEntity.getUserEntity();
-        double total = billEntity.getProductEntities().stream().mapToDouble(ProductEntity::getPrice).sum();
+    public double calculateDiscount(BillDto billDto) {
+        UserDto userDto = billDto.getUserDto();
+        double total = billDto.getProductDtos().stream().mapToDouble(ProductDto::getPrice).sum();
         double discount = 0;
 
         // Percentage-based discount
-        if (billEntity.getProductEntities().stream().noneMatch(p -> p.getCategory().equals(ProductCategory.GROCERY))) {
-            if (user.getUserType().equals(UserType.EMPLOYEE)) {
+        if (billDto.getProductDtos().stream().noneMatch(p -> p.getCategory().equals(ProductCategory.GROCERY))) {
+            if (userDto.getUserType().equals(UserType.EMPLOYEE)) {
                 discount = total * 0.30;
-            } else if (user.getUserType().equals(UserType.AFFILIATE)) {
+            } else if (userDto.getUserType().equals(UserType.AFFILIATE)) {
                 discount = total * 0.10;
-            } else if (user.getUserType().equals(UserType.CUSTOMER) &&
-                    ChronoUnit.YEARS.between(user.getCreatedDate(), LocalDate.now()) > 2) {
+            } else if (userDto.getUserType().equals(UserType.CUSTOMER) &&
+                    ChronoUnit.YEARS.between(userDto.getCreatedDate(), LocalDate.now()) > 2) {
                 discount = total * 0.05;
             }
         }
