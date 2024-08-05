@@ -103,5 +103,5 @@ This project calculates the net payable amount for a bill in a retail store cons
 - `DELETE /localhost:8282/bills/{id}`: Delete a bill by ID
 
 ## UML Class Diagram
-
 ![img.png](img.png)
+
