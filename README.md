@@ -8,7 +8,7 @@ This project calculates the net payable amount for a bill in a retail store cons
 1. 30% discount for store employees.
 2. 10% discount for store affiliates.
 3. 5% discount for customers who have been with the store for over 2 years.
-4. $5 discount for every $100 on the bill.
+4. Flat $5 discount for every $100 on the bill.
 5. Percentage-based discounts do not apply to groceries.
 6. Only one percentage-based discount can be applied per bill.
 
@@ -84,9 +84,24 @@ This project calculates the net payable amount for a bill in a retail store cons
 ### Bill Controller
 - `GET /localhost:8282/bills`: Get all bills
 - `GET /localhost:8282/bills/{id}`: Get bill by ID
-- `POST /localhost:8282/bills`: Create a new bill
-
+- `POST /localhost:8282/bills`: Create a new bill to get the netamount
+```
+{
+    "userDto": {
+        "id": 1,
+        "userType": "EMPLOYEE"
+    },
+    "productDtos": [
+        {
+            "name": "Product 1",
+            "price": 100,
+            "category": "OTHER"
+        }
+    ]
+}
+```
 - `DELETE /localhost:8282/bills/{id}`: Delete a bill by ID
 
 ## UML Class Diagram
-![UML Class Diagram](./UML_Class_Diagram.png)
+
+![img.png](img.png)
