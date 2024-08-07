@@ -16,5 +16,6 @@ public class UserDto {
     private String name;
     @NotNull(message = "Please specify user type")
     private UserType userType;
+    @NotNull(message = "Please specify created Date")
     private LocalDate createdDate;
 }

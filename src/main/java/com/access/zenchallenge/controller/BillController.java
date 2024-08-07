@@ -1,6 +1,7 @@
 package com.access.zenchallenge.controller;
 
 import com.access.zenchallenge.dto.BillDto;
+import com.access.zenchallenge.dto.BillDtoResponse;
 import com.access.zenchallenge.entity.BillEntity;
 
 import com.access.zenchallenge.services.BillService;
@@ -32,7 +33,7 @@ public class BillController {
     }
 
     @PostMapping
-    public BillEntity createBill(@RequestBody @Valid BillDto billDto) {
+    public BillDtoResponse createBill(@RequestBody @Valid BillDto billDto) {
         return billService.saveBill(billDto);
     }
 

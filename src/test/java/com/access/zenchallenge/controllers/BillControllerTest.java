@@ -2,6 +2,7 @@ package com.access.zenchallenge.controllers;
 
 import com.access.zenchallenge.controller.BillController;
 import com.access.zenchallenge.dto.BillDto;
+import com.access.zenchallenge.dto.BillDtoResponse;
 import com.access.zenchallenge.dto.ProductDto;
 import com.access.zenchallenge.dto.UserDto;
 import com.access.zenchallenge.entity.BillEntity;
@@ -38,6 +39,7 @@ class BillControllerTest {
 
     private BillDto billDto;
     private BillEntity billEntity;
+    private BillDtoResponse billDtoResponse;
 
     @BeforeEach
     void setUp() {
@@ -56,11 +58,12 @@ class BillControllerTest {
         billDto.setId(1L);
         billDto.setUserDto(userDto);
         billDto.setProductDtos(Arrays.asList(productDto));
-        // Add other properties to the BillDto as needed
 
         billEntity = new BillEntity();
         billEntity.setId(1L);
-        // Add other properties to the BillEntity as needed
+
+        billDtoResponse = new BillDtoResponse();
+
     }
 
     @Test
@@ -91,14 +94,14 @@ class BillControllerTest {
 
     @Test
     void testCreateBill() throws Exception {
-        when(billService.saveBill(billDto)).thenReturn(billEntity);
+        when(billService.saveBill(billDto)).thenReturn(billDtoResponse);
         String content = (new ObjectMapper()).writeValueAsString(billDto);
 
         mockMvc.perform(post("/bills")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content)) // Add other properties to the JSON as needed
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(billEntity.getId()));
+                .andExpect(jsonPath("$.netPayableAmount").value(billDtoResponse.getNetPayableAmount()));
     }
 
     @Test

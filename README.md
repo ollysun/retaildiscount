@@ -47,15 +47,17 @@ This project calculates the net payable amount for a bill in a retail store cons
 - `POST /localhost:8282/users`: Create a new user
 ```
 {
-    "name": "John Doe",
-    "userType": "EMPLOYEE",
+    "name": "mick",
+    "userType": "CUSTOMER",
+    "createdDate": "2022-08-07"
 }
 ```
 - `PUT /localhost:8282/users/{id}`: Update user
 ```
 {
-    "name": "John Doe2",
-    "userType": "AFFILIATE",
+    "name": "mick",
+    "userType": "CUSTOMER",
+    "createdDate": "2022-08-07"
 }
 ```
 - `DELETE /localhost:8282/users/{id}`: Delete a user by ID
@@ -89,7 +91,8 @@ This project calculates the net payable amount for a bill in a retail store cons
 {
     "userDto": {
         "id": 1,
-        "userType": "EMPLOYEE"
+        "userType": "EMPLOYEE",
+        "createdDate":"2021-07-08"
     },
     "productDtos": [
         {

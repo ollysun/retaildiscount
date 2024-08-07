@@ -1,13 +1,13 @@
 package com.access.zenchallenge.entity;
 
 import com.access.zenchallenge.constant.UserType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-
 import java.time.LocalDate;
+import java.util.regex.Pattern;
 
 @Getter
 @Setter
@@ -23,6 +23,6 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
-    @CreatedDate
+    @Column( nullable = false, updatable = false )
     private LocalDate createdDate;
 }

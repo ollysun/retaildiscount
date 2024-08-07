@@ -2,6 +2,7 @@ package com.access.zenchallenge.services;
 
 
 import com.access.zenchallenge.dto.BillDto;
+import com.access.zenchallenge.dto.BillDtoResponse;
 import com.access.zenchallenge.entity.BillEntity;
 import com.access.zenchallenge.repository.BillRepository;
 import jakarta.validation.Valid;
@@ -39,7 +40,7 @@ public class BillService {
     }
 
     @Transactional
-    public BillEntity saveBill(@Valid BillDto billDto) {
+    public BillDtoResponse saveBill(@Valid BillDto billDto) {
         if (billDto == null) {
             throw new IllegalArgumentException("BillDto cannot be null");
         }
@@ -53,7 +54,9 @@ public class BillService {
         // Save the net payable amount to the bill
         billDto.setNetPayableAmount(netPayableAmount);
         BillEntity billEntity = modelMapper.map(billDto, BillEntity.class);
-        return billRepository.save(billEntity);
+        BillDtoResponse billDtoResponse = new BillDtoResponse();
+        billDtoResponse.setNetPayableAmount(billRepository.save(billEntity).getNetPayableAmount());
+        return billDtoResponse;
     }
 
     @Transactional

@@ -3,6 +3,7 @@ package com.access.zenchallenge.services;
 import com.access.zenchallenge.constant.ProductCategory;
 import com.access.zenchallenge.constant.UserType;
 import com.access.zenchallenge.dto.BillDto;
+import com.access.zenchallenge.dto.BillDtoResponse;
 import com.access.zenchallenge.dto.ProductDto;
 import com.access.zenchallenge.dto.UserDto;
 import com.access.zenchallenge.entity.BillEntity;
@@ -148,11 +149,10 @@ class BillServiceTest {
         when(modelMapper.map(any(BillDto.class), eq(BillEntity.class))).thenReturn(billEntity);
         when(billRepository.save(any(BillEntity.class))).thenReturn(billEntity);
 
-        BillEntity result = billService.saveBill(billDto);
+        BillDtoResponse result = billService.saveBill(billDto);
 
         assertNotNull(result);
         assertEquals(180.0, result.getNetPayableAmount());
-        assertEquals(1L, result.getId());
         verify(discountService, times(1)).calculateDiscount(any(BillDto.class));
         verify(billRepository, times(1)).save(any(BillEntity.class));
 
